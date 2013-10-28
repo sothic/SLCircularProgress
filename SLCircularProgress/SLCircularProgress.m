@@ -30,6 +30,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 #define kRadiusOffset 10
+#define TOUCH_POINT_OFFSET 10
 
 #define CIRCULAR_FONT 50
 
@@ -179,7 +180,17 @@
 -(BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event{
     [super beginTrackingWithTouch:touch withEvent:event];
     
-    //We need to track continuously
+    CGPoint firstPoint = [touch locationInView:self];
+    CGPoint centerPoint = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
+    CGFloat radius = self.bounds.size.width/2 - kRadiusOffset ;
+    
+    //calculate the distance between start point and center point
+    float distance = DistanceFromPoints(firstPoint, centerPoint);
+    
+    //if the distance larger than the offset, it doesn't allow to trigger move
+    if (fabsf(distance- radius) > TOUCH_POINT_OFFSET) {
+        return NO;
+    }
     return YES;
 }
 
@@ -263,6 +274,12 @@ static inline float AngleFromNorth(CGPoint p1, CGPoint p2, BOOL flipped) {
     result = ToDeg(radians);
     return (result >=0  ? result : result + 360.0);
 }
+
+//Calculate the distance
+static inline float DistanceFromPoints(CGPoint p1, CGPoint p2){
+    return sqrtf(powf((p1.x-p2.x),2.0f) +  powf((p1.y-p2.y),2.0f));
+}
+
 
 @end
 

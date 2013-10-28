@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLCircularProgress.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<SLCircularProgressDelegate>
 - (IBAction)addPercentage:(id)sender;
 
 @end
